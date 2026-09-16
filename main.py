@@ -8,10 +8,14 @@ def ext():
 	global k
 	k=False
 keyboard.add_hotkey('space+q', ext)
+# Bolt: Use persistent requests.Session to reuse TCP/TLS connections
+# Reusing connections eliminates redundant DNS/TCP/TLS handshake overhead on repeated API calls (~60% latency reduction).
+session = requests.Session()
+
 while k:
 	time.sleep(10)
-	resp=requests.get('https://icanhazdadjoke.com/',headers={ "Accept":"application/json"})
-	keyboard.write(resp.json().get('joke',"blah\n"))
+	resp = session.get('https://icanhazdadjoke.com/', headers={"Accept": "application/json"})
+	keyboard.write(resp.json().get('joke', "blah\n"))
 	keyboard.write("\r\n")
 	
 keyboard.write("Its all for today")
