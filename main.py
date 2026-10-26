@@ -8,10 +8,14 @@ def ext():
 	global k
 	k=False
 keyboard.add_hotkey('space+q', ext)
+# Use persistent session to reuse HTTP/HTTPS TCP connections and TLS handshakes across requests
+session = requests.Session()
+session.headers.update({"Accept": "application/json"})
+
 while k:
 	time.sleep(10)
-	resp=requests.get('https://icanhazdadjoke.com/',headers={ "Accept":"application/json"})
-	keyboard.write(resp.json().get('joke',"blah\n"))
+	resp = session.get('https://icanhazdadjoke.com/')
+	keyboard.write(resp.json().get('joke', "blah\n"))
 	keyboard.write("\r\n")
 	
 keyboard.write("Its all for today")
